@@ -2,17 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLocomotion : MonoBehaviour
+namespace SG
 {
-    // Start is called before the first frame update
-    void Start()
+    public class PlayerLocomotion : MonoBehaviour
     {
-        
-    }
+        Transform cameraObject;
+        InputHandler inputHandler;
+        Vector3 moveDirection;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [HideInInspector]
+        public Transform myTransform;
+
+        public new Rigidbody rigidbody;
+        public GameObject normalCamera;
+
+        [Header("Status")]
+        [SerializeField]
+        float movementSpeed = 5;
+        [SerializeField]
+        float rotationSpeed = 10;
+
+        private void Start()
+        {
+            rigidbody = GetComponent<Rigidbody>();
+            inputHandler = GetComponent<InputHandler>();
+            cameraObject = Camera.main.transform;
+            myTransform = transform;
+        }
+
+        #region Movement
+        Vector3 normalVector;
+        Vector3 targetPosition;
+
+        private void HanlderRotation(float delta)
+        {
+            // position
+            Vector3 targetDir = Vector3.zero;
+            float moveOverride = inputHandler.moveAmount;
+
+            targetDir = cameraObject.forward * inputHandler.vertical;
+            targetDir += cameraObject.right * inputHandler.horizontal;
+
+            targetDir.Normalize();
+            targetDir.y = 0;
+
+            if (targetDir == Vector3.zero)
+                targetDir = myTransform.forward;
+
+            // rotation 
+            float rs = rotationSpeed;
+
+            Quaternion tr = Quaternion.LookRotation(targetDir);
+            Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta);
+
+            myTransform.rotation = targetRotation;
+        }
+
+
+        #endregion
+
     }
 }
