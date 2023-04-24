@@ -30,6 +30,23 @@ namespace SG
             myTransform = transform;
         }
 
+        public void Update()
+        {
+            float delta = Time.deltaTime;
+
+            inputHandler.TickInput(delta);
+
+            moveDirection = cameraObject.forward * inputHandler.vertical;
+            moveDirection += cameraObject.right * inputHandler.horizontal;
+            moveDirection.Normalize();
+
+            float speed = movementSpeed;
+            moveDirection *= speed;
+
+            Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
+            rigidbody.velocity = projectedVelocity;
+        }
+
         #region Movement
         Vector3 normalVector;
         Vector3 targetPosition;
