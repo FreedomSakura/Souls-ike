@@ -29,7 +29,7 @@ namespace SG
             rigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
-            Debug.Log(animatorHandler);
+            
             animatorHandler.Initialize();
             cameraObject = Camera.main.transform;
             myTransform = transform;
@@ -42,6 +42,7 @@ namespace SG
 
             inputHandler.TickInput(delta);
 
+            // 移动方向 —— x+y 方向的向量相加即可得到
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
@@ -49,11 +50,13 @@ namespace SG
             float speed = movementSpeed;
             moveDirection *= speed;
 
+            // 计算投影到地面的速度——但我感觉没必要，因为v和h只构成一个二维平面
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rigidbody.velocity = projectedVelocity;
+            //rigidbody.velocity = moveDirection;
 
-            // 动画
-            // 插值
+
+            // 动画——插值改变animator中的参数，以此来播放动画
             animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
 
             // 旋转

@@ -71,7 +71,8 @@ namespace SG
             }
 
             #endregion
-
+            
+            // 发送改变的量到animator
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
             anim.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
         }
