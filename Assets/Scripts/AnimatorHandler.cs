@@ -72,7 +72,7 @@ namespace SG
 
             #endregion
             
-            // 发送改变的量到animator
+            // vertical被限制在0.1s内到达v，并通过deltaTime来插值
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
             anim.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
         }
