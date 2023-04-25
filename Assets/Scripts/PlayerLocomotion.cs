@@ -33,7 +33,6 @@ namespace SG
             animatorHandler.Initialize();
             cameraObject = Camera.main.transform;
             myTransform = transform;
-
         }
 
         public void Update()
