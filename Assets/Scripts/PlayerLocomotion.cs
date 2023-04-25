@@ -40,12 +40,14 @@ namespace SG
         {
             float delta = Time.deltaTime;
 
+            // 每一帧都去获取输入
             inputHandler.TickInput(delta);
 
             // 移动方向 —— x+y 方向的向量相加即可得到
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
+            moveDirection.y = 0;
 
             float speed = movementSpeed;
             moveDirection *= speed;
@@ -73,28 +75,28 @@ namespace SG
 
         private void HandleRotation(float delta)
         {
-            // position
+            // 用Vector3计算出旋转的向量
             Vector3 targetDir = Vector3.zero;
             float moveOverride = inputHandler.moveAmount;
 
+            // 为什么要用camera的transform来计算target的方向？？？为了后续制作camera跟随target的逻辑吗？
             targetDir = cameraObject.forward * inputHandler.vertical;
             targetDir += cameraObject.right * inputHandler.horizontal;
-
             targetDir.Normalize();
             targetDir.y = 0;
 
             if (targetDir == Vector3.zero)
                 targetDir = myTransform.forward;
+ 
 
-            // rotation 
             float rs = rotationSpeed;
 
+            // 将Vector3向量转换为四元数
             Quaternion tr = Quaternion.LookRotation(targetDir);
-            Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta);
+            Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta); // 球面插值
 
             myTransform.rotation = targetRotation;
         }
-
 
         #endregion
 
